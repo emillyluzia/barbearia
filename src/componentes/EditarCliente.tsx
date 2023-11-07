@@ -1,80 +1,105 @@
-import React, {
-    Component, useState,
-    ChangeEvent, FormEvent, useEffect
-} from 'react';
-import Header from './Header';
-import Footer from './Footer';
-import styles from '../App.module.css';
-import axios from 'axios';
+import axios from "axios";
+import React, {Component, useState, ChangeEvent, FormEvent, useEffect} from "react";
+import { useParams } from "react-router-dom";
 
-const CadastroCliente = () => {
-    
+import styles from "../App.module.css"
+import Footer from "./Footer"
+import Header from "./Header"
+
+
+const EditarCliente = () => {
+
     const [Id, setId] = useState<string>("");
-    const [nome, setnome] = useState<string>("");
-    const [email, setemail] = useState<string>("");
-    const [celular, setcelular] = useState<string>("");
+    const [nome, setNome] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [celular, setCelular] = useState<string>("");
     const [cpf, setCpf] = useState<string>("");
     const [DatadeNascimento, setDatadeNascimento] = useState<string>("");
-    const [cidade, setcidade] = useState<string>("");
-    const [estado, setestado] = useState<string>("");
-    const [pais, setpais] = useState<string>("");
-    const [rua, setrua] = useState<string>("");
-    const [numero, setnumero] = useState<string>("");
-    const [bairro, setbairro] = useState<string>("");
-    const [cep, setcep] = useState<string>("");
-    const [complemento, setcomplememnto] = useState<string>("");
-    const [senha, setsenha] = useState<string>("");
+    const [cidade, setCidade] = useState<string>("");
+    const [estado, setEstado] = useState<string>("");
+    const [pais, setPais] = useState<string>("");
+    const [rua, setRua] = useState<string>("");
+    const [numero, setNumero] = useState<string>("");
+    const [bairro, setBairro] = useState<string>("");
+    const [cep, setCep] = useState<string>("");
+    const [complemento, setComplememnto] = useState<string>("");
 
-    const cadastrarCliente = (e: FormEvent) => {
-        e.preventDefault();
+    const parametro = useParams();
 
-        const dados = {
 
-         Id: Id,
-         nome: nome, 
-         celular: celular, 
-         email: email,
-         cpf: cpf,
-         DatadeNascimento: DatadeNascimento,
-         cidade: cidade,
-         estado:  estado,
-         pais: pais,
-         rua: rua,
-         numero: numero,
-         bairro: bairro,
-         cep: cep,
-         complemento: complemento,
-         senha: senha
-          }
+    const atualizarCliente = (e: FormEvent) => {
+    e.preventDefault();
 
-        axios.post('http://10.137.9.131:8000/api/store',
-        dados,
-        {
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-        }).then(function(response){  
-            window.location.href = "/listagem"
-        }).catch(function (error){
-            console.log(error);
-        });
-       
+    const dados ={
+        Id: Id,
+        nome: nome, 
+        celular: celular, 
+        email: email,
+        cpf: cpf,
+        DatadeNascimento: DatadeNascimento,
+        cidade: cidade,
+        estado:  estado,
+        pais: pais,
+        rua: rua,
+        numero: numero,
+        bairro: bairro,
+        cep: cep,
+        complemento: complemento,
+        
+    }
+
+    axios.put("http://10.137.9.134:8000/api/update",
+    dados,
+    {
+        headers: {
+             "Accept": "application/json",
+             "Content-Type": "application/json"
+        }
+    }).then(function(response){
+         window.location.href = "/listagem"
+    }).catch(function(error){
+         console.log('Ocorreu um erro ao atualizar')
+    });
 
     }
+
+    useEffect(() => {
+        async function fetchData () {
+            try{
+                const response = await axios.get("http://10.137.9.134:8000/api/find/"+parametro.id);
+                setId(response.data.data.id);
+                setNome(response.data.data.nome);
+                setCelular(response.data.data.celular);
+                setEmail(response.data.data.email);
+                setCpf(response.data.data.cpf);
+                setDatadeNascimento(response.data.data.datadenascimneto);
+                setCidade(response.data.data.cidade);
+                setEstado(response.data.data.estado);
+                setPais(response.data.data.pais);
+                setRua(response.data.data.rua);
+                setNumero(response.data.data.numero);
+                setBairro(response.data.data.bairro);
+                setCep(response.data.data.id);
+                setComplememnto(response.data.data.complemento);
+            } catch(error){
+                console.log("erro ao buscar dados api")
+            }
+        }
+        fetchData();
+    }, []);
 
     const handleState = (e: ChangeEvent<HTMLInputElement>) => {
         if(e.target.name === "Id"){
             setId(e.target.value);
         }
         if(e.target.name === "nome"){
-            setnome(e.target.value);
+            setNome(e.target.value);
         }
         if(e.target.name === "celular"){
-            setcelular(e.target.value);
+            setCelular(e.target.value);
         }
         if(e.target.name === "email"){
-            setemail(e.target.value);
+            setEmail(e.target.value);
         }
         if(e.target.name === "cpf"){
             setCpf(e.target.value);
@@ -83,53 +108,40 @@ const CadastroCliente = () => {
             setDatadeNascimento(e.target.value);
         }
         if(e.target.name === "cidade"){
-            setcidade(e.target.value);
+            setCidade(e.target.value);
         }
         if(e.target.name === "estado"){
-            setestado(e.target.value);
+            setEstado(e.target.value);
         }
         if(e.target.name === "pais"){
-            setpais(e.target.value);
+            setPais(e.target.value);
         }
         if(e.target.name === "rua"){
-            setrua(e.target.value);
+            setRua(e.target.value);
         }
         if(e.target.name === "numero"){
-            setnumero(e.target.value);
+            setNumero(e.target.value);
         }
         if(e.target.name === "bairro"){
-            setbairro(e.target.value);
+            setBairro(e.target.value);
         }
         if(e.target.name === "cep"){
-            setcep(e.target.value);
+            setCep(e.target.value);
         }
         if(e.target.name === "complemento"){
-            setcomplememnto(e.target.value);
-        }
-        if(e.target.name === "senha"){
-            setsenha(e.target.value);
+            setComplememnto(e.target.value);
         }
     }
-
     return (
         <div>
-           <Header/>
+            <Header/>
             <main className={styles.main}>
                 <div className='container'>
                     <div className='card'>
                         <div className='card-body'>
                             <h5 className='card-title'>Cadastrar Cliente</h5>
-                            <form onSubmit={cadastrarCliente} className='row g-3'>
-                                <div className='col-6'>
-                                    <label htmlFor="Id" className='form-label'>Id</label>   
-                                    <input type="text"
-                                    name='Id'
-                                    className='form-control'
-                                    required
-                                    onChange={handleState}
-                                    />              
-                                </div>
-                                <div className='col-6'>
+                            <form onSubmit={atualizarCliente} className='row g-3'>
+                            <div className='col-6'>
                                     <label htmlFor="Nome" className='form-label'>Nome</label>  
                                     <input type="text"
                                     name='Nome'
@@ -258,7 +270,7 @@ const CadastroCliente = () => {
                                 <div className='col-12'>
                                     <button
                                     type='submit'
-                                    className='btn btn-success btn-sm'>Cadastrar</button>
+                                    className='btn btn-success btn-sm'>Atualizar</button>
                                 </div>                       
                                
                             </form>
@@ -271,4 +283,4 @@ const CadastroCliente = () => {
     );
 }
 
-export default CadastroCliente
+export default EditarCliente;
