@@ -1,47 +1,64 @@
-import React, {
-    Component, useState,
-    ChangeEvent, FormEvent, useEffect
-} from 'react';
-import Header from './Header';
-import Footer from './Footer';
-import styles from '../App.module.css';
-import axios from 'axios';
+import axios from "axios";
+import React, {Component, useState, ChangeEvent, FormEvent, useEffect} from "react";
+import { useParams } from "react-router-dom";
 
-const CadastroServico = () => {
-    
+import styles from "../App.module.css"
+import Footer from "./Footer"
+import Header from "./Header"
+
+
+const EditarServiços = () => {
+
     const [Id, setId] = useState<string>("");
     const [nome, setNome] = useState<string>("");
     const [descricao, setDescricao] = useState<string>("");
     const [duracao, setDuracao] = useState<string>("");
     const [preco, setPreco] = useState<string>("");
 
-    const cadastrarServico = (e: FormEvent) => {
-        e.preventDefault();
 
-        const dados = {
+    const atualizarServicos = (e: FormEvent) => {
+    e.preventDefault();
 
-         Id: Id,
-         nome: nome, 
-         descricao: descricao, 
-         duracao: duracao,
-         preco: preco,
-          }
+    const dados ={
+        Id: Id,
+        nome: nome, 
+        descricao: descricao, 
+        duracao: duracao,
+        preco: preco
+        
+        
+    }
 
-        axios.post('http://127.0.0.1:8000/api/store',
-        dados,
-        {
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-        }).then(function(response){  
-            window.location.href = "/listagem"
-        }).catch(function (error){
-            console.log(error);
-        });
-       
+    axios.put("http://10.137.9.134:8000/api/update",
+    dados,
+    {
+        headers: {
+             "Accept": "application/json",
+             "Content-Type": "application/json"
+        }
+    }).then(function(response){
+         window.location.href = "/listagem"
+    }).catch(function(error){
+         console.log('Ocorreu um erro ao atualizar')
+    });
 
     }
+
+    useEffect(() => {
+        async function fetchData () {
+            try{
+                const response = await axios.get("http://10.137.9.134:8000/api/find/");
+                setId(response.data.data.id);
+                setNome(response.data.data.nome);
+                setDescricao(response.data.data.celular);
+                setDuracao(response.data.data.email);
+                setPreco(response.data.data.cpf);
+            } catch(error){
+                console.log("erro ao buscar dados api")
+            }
+        }
+        fetchData();
+    }, []);
 
     const handleState = (e: ChangeEvent<HTMLInputElement>) => {
         if(e.target.name === "Id"){
@@ -50,37 +67,26 @@ const CadastroServico = () => {
         if(e.target.name === "nome"){
             setNome(e.target.value);
         }
-        if(e.target.name === "descricao"){
+        if(e.target.name === "DESCRICAO"){
             setDescricao(e.target.value);
         }
-        if(e.target.name === "duracao"){
+        if(e.target.name === "email"){
             setDuracao(e.target.value);
         }
-        if(e.target.name === "preco"){
+        if(e.target.name === "Preco"){
             setPreco(e.target.value);
         }
-        
     }
-
     return (
         <div>
-           <Header/>
+            <Header/>
             <main className={styles.main}>
                 <div className='container'>
                     <div className='card'>
                         <div className='card-body'>
                             <h5 className='card-title'>Cadastrar Cliente</h5>
-                            <form onSubmit={cadastrarServico} className='row g-3'>
-                                <div className='col-6'>
-                                    <label htmlFor="Id" className='form-label'>Id</label>   
-                                    <input type="text"
-                                    name='Id'
-                                    className='form-control'
-                                    required
-                                    onChange={handleState}
-                                    />              
-                                </div>
-                                <div className='col-6'>
+                            <form onSubmit={atualizarServicos} className='row g-3'>
+                            <div className='col-6'>
                                     <label htmlFor="Nome" className='form-label'>Nome</label>  
                                     <input type="text"
                                     name='Nome'
@@ -90,7 +96,7 @@ const CadastroServico = () => {
                                      />   
                                 </div>
                                 <div className='col-6'>
-                                    <label htmlFor="descriçao" className='form-label'>Descrição</label>  
+                                    <label htmlFor="descricao" className='form-label'>Descrição</label>  
                                     <input type="text"
                                     name='descricao'
                                     className='form-control'
@@ -119,8 +125,8 @@ const CadastroServico = () => {
                                 <div className='col-12'>
                                     <button
                                     type='submit'
-                                    className='btn btn-success btn-sm'>Cadastrar</button>
-                                </div>   
+                                    className='btn btn-success btn-sm'>Atualizar</button>
+                                </div>                       
                                
                             </form>
                         </div>
@@ -132,4 +138,4 @@ const CadastroServico = () => {
     );
 }
 
-export default CadastroServico
+export default EditarServiços;

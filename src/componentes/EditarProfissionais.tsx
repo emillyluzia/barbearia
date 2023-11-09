@@ -1,19 +1,20 @@
-import React, {
-    Component, useState,
-    ChangeEvent, FormEvent, useEffect
-} from 'react';
-import Header from './Header';
-import Footer from './Footer';
-import styles from '../App.module.css';
-import axios from 'axios';
+import axios from "axios";
+import React, {Component, useState, ChangeEvent, FormEvent, useEffect} from "react";
+import { useParams } from "react-router-dom";
 
-const CadastroProfissionais = () => {
-    
+import styles from "../App.module.css"
+import Footer from "./Footer"
+import Header from "./Header"
+
+
+const EditarProfissionais = () => {
+
+    const [Id, setId] = useState<string>("");
     const [nome, setNome] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [celular, setCelular] = useState<string>("");
     const [cpf, setCpf] = useState<string>("");
-    const [datadenascimento, setDatadeNascimento] = useState<string>("");
+    const [DatadeNascimento, setDatadeNascimento] = useState<string>("");
     const [cidade, setCidade] = useState<string>("");
     const [estado, setEstado] = useState<string>("");
     const [pais, setPais] = useState<string>("");
@@ -22,49 +23,77 @@ const CadastroProfissionais = () => {
     const [bairro, setBairro] = useState<string>("");
     const [cep, setCep] = useState<string>("");
     const [complemento, setComplememnto] = useState<string>("");
-    const [senha, setSenha] = useState<string>("");
     const [salario, setSalario] = useState<string>("");
+    const parametro = useParams();
 
-    const cadastrarProfissionais = (e: FormEvent) => {
-        e.preventDefault();
 
-        const dados = {
+    const atualizarProffisionais = (e: FormEvent) => {
+    e.preventDefault();
 
-         
-         nome: nome, 
-         celular: celular, 
-         email: email,
-         cpf: cpf,
-         DatadeNascimento: datadenascimento,
-         cidade: cidade,
-         estado:  estado,
-         pais: pais,
-         rua: rua,
-         numero: numero,
-         bairro: bairro,
-         cep: cep,
-         complemento: complemento,
-         senha: senha,
-         salario: salario
-          }
+    const dados ={
+        Id: Id,
+        nome: nome, 
+        celular: celular, 
+        email: email,
+        cpf: cpf,
+        DatadeNascimento: DatadeNascimento,
+        cidade: cidade,
+        estado:  estado,
+        pais: pais,
+        rua: rua,
+        numero: numero,
+        bairro: bairro,
+        cep: cep,
+        complemento: complemento,
+        salario: salario
+        
+    }
 
-        axios.post('http://10.137.9.131:8000/api/store',
-        dados,
-        {
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-        }).then(function(response){  
-            window.location.href = "/listagem"
-        }).catch(function (error){
-            console.log(error);
-        });
-       
+    axios.put("http://10.137.9.134:8000/api/update",
+    dados,
+    {
+        headers: {
+             "Accept": "application/json",
+             "Content-Type": "application/json"
+        }
+    }).then(function(response){
+         window.location.href = "/listagem"
+    }).catch(function(error){
+         console.log('Ocorreu um erro ao atualizar')
+    });
 
     }
 
+    useEffect(() => {
+        async function fetchData () {
+            try{
+                const response = await axios.get("http://10.137.9.134:8000/api/find/"+parametro.id);
+                setId(response.data.data.id);
+                setNome(response.data.data.nome);
+                setCelular(response.data.data.celular);
+                setEmail(response.data.data.email);
+                setCpf(response.data.data.cpf);
+                setDatadeNascimento(response.data.data.datadenascimneto);
+                setCidade(response.data.data.cidade);
+                setEstado(response.data.data.estado);
+                setPais(response.data.data.pais);
+                setRua(response.data.data.rua);
+                setNumero(response.data.data.numero);
+                setBairro(response.data.data.bairro);
+                setCep(response.data.data.id);
+                setComplememnto(response.data.data.complemento);
+                setSalario(response.data.data.salario);
+            } catch(error){
+                console.log("erro ao buscar dados api")
+            }
+        }
+        fetchData();
+    }, []);
+
     const handleState = (e: ChangeEvent<HTMLInputElement>) => {
+        if(e.target.name === "Id"){
+            setId(e.target.value);
+        }
         if(e.target.name === "nome"){
             setNome(e.target.value);
         }
@@ -104,34 +133,20 @@ const CadastroProfissionais = () => {
         if(e.target.name === "complemento"){
             setComplememnto(e.target.value);
         }
-        if(e.target.name === "senha"){
-            setSenha(e.target.value);
-        }
         if(e.target.name === "salario"){
             setSalario(e.target.value);
         }
-        
     }
-
     return (
         <div>
-           <Header/>
+            <Header/>
             <main className={styles.main}>
                 <div className='container'>
                     <div className='card'>
                         <div className='card-body'>
-                            <h5 className='card-title'>Cadastrar Profissionais</h5>
-                            <form onSubmit={cadastrarProfissionais} className='row g-3'>
-                                <div className='col-6'>
-                                    <label htmlFor="Id" className='form-label'>Id</label>   
-                                    <input type="text"
-                                    name='Id'
-                                    className='form-control'
-                                    required
-                                    onChange={handleState}
-                                    />              
-                                </div>
-                                <div className='col-6'>
+                            <h5 className='card-title'>Cadastrar Cliente</h5>
+                            <form onSubmit={atualizarProffisionais} className='row g-3'>
+                            <div className='col-6'>
                                     <label htmlFor="Nome" className='form-label'>Nome</label>  
                                     <input type="text"
                                     name='Nome'
@@ -249,16 +264,7 @@ const CadastroProfissionais = () => {
                                      /> 
                                 </div>
                                 <div className='col-6'>
-                                    <label htmlFor="password" className='form-label'>Senha</label>  
-                                    <input type="text"
-                                    name='password'
-                                    className='form-control'
-                                    required
-                                    onChange={handleState}
-                                     /> 
-                                </div>
-                                <div className='col-6'>
-                                    <label htmlFor="salario" className='form-label'>Salário</label>  
+                                    <label htmlFor="password" className='form-label'>Salario</label>  
                                     <input type="text"
                                     name='salario'
                                     className='form-control'
@@ -269,7 +275,7 @@ const CadastroProfissionais = () => {
                                 <div className='col-12'>
                                     <button
                                     type='submit'
-                                    className='btn btn-success btn-sm'>Cadastrar</button>
+                                    className='btn btn-success btn-sm'>Atualizar</button>
                                 </div>                       
                                
                             </form>
@@ -282,4 +288,4 @@ const CadastroProfissionais = () => {
     );
 }
 
-export default CadastroProfissionais
+export default EditarProfissionais;

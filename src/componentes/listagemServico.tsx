@@ -3,11 +3,11 @@ import React, { Component, useState, ChangeEvent, FormEvent, useEffect } from 'r
 
 
 import styles from "../App.module.css";
-import {CadastroProfissionaisInterface } from '../interfaces/CadastroProfissionaisInterfaces';
+import { CadastroServicoInterface } from '../interfaces/CadastroServicoInterfaces';
 
-const ListagemProfissionais = () => {
+const ListagemCliente = () => {
 
-    const [usuarios, setUsuarios] = useState<CadastroProfissionaisInterface[]>([]);
+    const [usuarios, setUsuarios] = useState<CadastroServicoInterface[]>([]);
     const [pesquisa, setPesquisa] = useState<string>('');
     const [error, setError] = useState("");
 
@@ -23,7 +23,7 @@ const ListagemProfissionais = () => {
         async function fetchData() {
             try {
 
-                const response = await axios.post('http://127.0.0.1:8000/api/store/Profissional',
+                const response = await axios.post('http://127.0.0.1:8000/api/store/cliente',
                     { nome: pesquisa },
                     {
                         headers: {
@@ -46,7 +46,7 @@ const ListagemProfissionais = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/store/Profissional');
+                const response = await axios.get('http://127.0.0.1:8000/api/store/cliente');
                 setUsuarios(response.data.data);
 
 
@@ -83,25 +83,15 @@ const ListagemProfissionais = () => {
                     </div>
                     <div className='card'>
                         <div className='card-body'>
-                            <h5 className='card-title'> Listagem de Profissionais</h5>
+                            <h5 className='card-title'> Listagem de Serviço</h5>
                             <table className='table table-hover'>
                                 <thead>
                                     <tr>
                                         <th>ID</th>
                                         <th>Nome</th>
-                                        <th>celular</th>
-                                        <th>E-mail</th>
-                                        <th>cpf</th>
-                                        <th>DatadeNascimento</th>
-                                        <th>cidade</th>
-                                        <th>estado</th>
-                                        <th>pais</th>
-                                        <th>rua</th>
-                                        <th>numero</th>
-                                        <th>bairro</th>
-                                        <th>cep</th>
-                                        <th>complemento</th>
-                                        <th>senha</th>
+                                        <th>descricao</th>
+                                        <th>duracao</th>
+                                        <th>preco</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -109,21 +99,10 @@ const ListagemProfissionais = () => {
                                         <tr key={cliente.id}>
                                             <td>{cliente.id}</td>
                                             <td>{cliente.nome}</td>
-                                            <td>{cliente.celular}</td>
-                                            <td>{cliente.email}</td>
-                                            <td>{cliente.cpf}</td>
-                                            <td>{cliente.DatadeNascimento}</td>
-                                            <td>{cliente.cidade}</td>
-                                            <td>{cliente.estado}</td>
-                                            <td>{cliente.pais}</td>
-                                            <td>{cliente.rua}</td>
-                                            <td>{cliente.numero}</td>
-                                            <td>{cliente.bairro}</td>
-                                            <td>{cliente.cep}</td>
-                                            <td>{cliente.complemento}</td>
-                                            <td>{cliente.senha}</td>
-
-
+                                            <td>{cliente.descricao}</td>
+                                            <td>{cliente.duracao}</td>
+                                            <td>{cliente.preco}</td>
+                                            
                                             <td>
                                                 <a href="#" className='btn btn-primary btn-sm'>Editar</a>
                                                 <a href="#" className='btn btn-danger btn-sm'>Excluir</a>
@@ -140,4 +119,4 @@ const ListagemProfissionais = () => {
     );
 }
 
-export default ListagemProfissionais;
+export default ListagemCliente;

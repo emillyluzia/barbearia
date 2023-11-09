@@ -9,33 +9,33 @@ import axios from 'axios';
 
 const CadastroCliente = () => {
     
-    const [Id, setId] = useState<string>("");
-    const [nome, setnome] = useState<string>("");
-    const [email, setemail] = useState<string>("");
-    const [celular, setcelular] = useState<string>("");
+    
+    const [nome, setNome] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [celular, setCelular] = useState<string>("");
     const [cpf, setCpf] = useState<string>("");
-    const [DatadeNascimento, setDatadeNascimento] = useState<string>("");
-    const [cidade, setcidade] = useState<string>("");
-    const [estado, setestado] = useState<string>("");
-    const [pais, setpais] = useState<string>("");
-    const [rua, setrua] = useState<string>("");
-    const [numero, setnumero] = useState<string>("");
-    const [bairro, setbairro] = useState<string>("");
-    const [cep, setcep] = useState<string>("");
-    const [complemento, setcomplememnto] = useState<string>("");
-    const [senha, setsenha] = useState<string>("");
+    const [datadenascimento, setDatadeNascimento] = useState<string>("");
+    const [cidade, setCidade] = useState<string>("");
+    const [estado, setEstado] = useState<string>("");
+    const [pais, setPais] = useState<string>("");
+    const [rua, setRua] = useState<string>("");
+    const [numero, setNumero] = useState<string>("");
+    const [bairro, setBairro] = useState<string>("");
+    const [cep, setCep] = useState<string>("");
+    const [complemento, setComplememnto] = useState<string>("");
+    const [senha, setSenha] = useState<string>("");
 
     const cadastrarCliente = (e: FormEvent) => {
         e.preventDefault();
 
         const dados = {
 
-         Id: Id,
+       
          nome: nome, 
          celular: celular, 
          email: email,
          cpf: cpf,
-         DatadeNascimento: DatadeNascimento,
+         datadenascimento: datadenascimento,
          cidade: cidade,
          estado:  estado,
          pais: pais,
@@ -47,7 +47,7 @@ const CadastroCliente = () => {
          senha: senha
           }
 
-        axios.post('http://10.137.9.131:8000/api/store',
+        axios.post('http://127.0.0.1:8000/api/store/Cliente',
         dados,
         {
             headers: {
@@ -55,7 +55,13 @@ const CadastroCliente = () => {
                 "Content-Type": "application/json"
             }
         }).then(function(response){  
-            window.location.href = "/listagem"
+            if(response.data.status == true){
+                window.location.href = "/listagemCliente"
+            }else{
+                console.log("erro")
+                console.log(response)
+            }
+           
         }).catch(function (error){
             console.log(error);
         });
@@ -64,50 +70,48 @@ const CadastroCliente = () => {
     }
 
     const handleState = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.name === "Id"){
-            setId(e.target.value);
-        }
+      
         if(e.target.name === "nome"){
-            setnome(e.target.value);
+            setNome(e.target.value);
         }
         if(e.target.name === "celular"){
-            setcelular(e.target.value);
+            setCelular(e.target.value);
         }
         if(e.target.name === "email"){
-            setemail(e.target.value);
+            setEmail(e.target.value);
         }
         if(e.target.name === "cpf"){
             setCpf(e.target.value);
         }
-        if(e.target.name === "DatadeNascimento"){
+        if(e.target.name === "datadenascimento"){
             setDatadeNascimento(e.target.value);
         }
         if(e.target.name === "cidade"){
-            setcidade(e.target.value);
+            setCidade(e.target.value);
         }
         if(e.target.name === "estado"){
-            setestado(e.target.value);
+            setEstado(e.target.value);
         }
         if(e.target.name === "pais"){
-            setpais(e.target.value);
+            setPais(e.target.value);
         }
         if(e.target.name === "rua"){
-            setrua(e.target.value);
+            setRua(e.target.value);
         }
         if(e.target.name === "numero"){
-            setnumero(e.target.value);
+            setNumero(e.target.value);
         }
         if(e.target.name === "bairro"){
-            setbairro(e.target.value);
+            setBairro(e.target.value);
         }
         if(e.target.name === "cep"){
-            setcep(e.target.value);
+            setCep(e.target.value);
         }
         if(e.target.name === "complemento"){
-            setcomplememnto(e.target.value);
+            setComplememnto(e.target.value);
         }
         if(e.target.name === "senha"){
-            setsenha(e.target.value);
+            setSenha(e.target.value);
         }
     }
 
@@ -121,18 +125,9 @@ const CadastroCliente = () => {
                             <h5 className='card-title'>Cadastrar Cliente</h5>
                             <form onSubmit={cadastrarCliente} className='row g-3'>
                                 <div className='col-6'>
-                                    <label htmlFor="Id" className='form-label'>Id</label>   
+                                    <label htmlFor="nome" className='form-label'>Nome</label>  
                                     <input type="text"
-                                    name='Id'
-                                    className='form-control'
-                                    required
-                                    onChange={handleState}
-                                    />              
-                                </div>
-                                <div className='col-6'>
-                                    <label htmlFor="Nome" className='form-label'>Nome</label>  
-                                    <input type="text"
-                                    name='Nome'
+                                    name='nome'
                                     className='form-control'
                                     required
                                     onChange={handleState}
@@ -150,7 +145,7 @@ const CadastroCliente = () => {
                                 <div className='col-6'>
                                     <label htmlFor="E-mail" className='form-label'>E-mail</label>  
                                     <input type="text"
-                                    name='E-mail'
+                                    name='email'
                                     className='form-control'
                                     required
                                     onChange={handleState}
@@ -159,16 +154,16 @@ const CadastroCliente = () => {
                                 <div className='col-6'>
                                     <label htmlFor="Cpf" className='form-label'>Cpf</label>  
                                     <input type="text"
-                                    name='Cpf'
+                                    name='cpf'
                                     className='form-control'
                                     required
                                     onChange={handleState}
                                      /> 
                                 </div>
                                 <div className='col-6'>
-                                    <label htmlFor="password" className='form-label'>Data de Nascimento</label>  
-                                    <input type="text"
-                                    name='Data de Nascimento'
+                                    <label htmlFor="datadenascimento" className='form-label'>Data de Nascimento</label>  
+                                    <input type="date"
+                                    name='datadenascimento'
                                     className='form-control'
                                     required
                                     onChange={handleState}
@@ -247,9 +242,9 @@ const CadastroCliente = () => {
                                      /> 
                                 </div>
                                 <div className='col-6'>
-                                    <label htmlFor="password" className='form-label'>Senha</label>  
+                                    <label htmlFor="senha" className='form-label'>Senha</label>  
                                     <input type="text"
-                                    name='password'
+                                    name='senha'
                                     className='form-control'
                                     required
                                     onChange={handleState}
